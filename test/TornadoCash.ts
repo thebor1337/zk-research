@@ -1,6 +1,6 @@
 import { expect, ethers, loadFixture, getCircomkit, time } from "../setup";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
-import { ProofTester, WitnessTester } from "circomkit";
+import { ProofTester } from "circomkit";
 import { buildMimcSponge, MimcSponge } from "circomlibjs";
 
 import { calculateMerkleRootAndPath } from "../src/TornadoCash";
@@ -76,13 +76,8 @@ describe("TornadoCash", function () {
 	    const root = 13605252518346649016266481317890801910232739395710162921320863289825142055129n;
 
 	    it("should compute correct root on JS", async () => {
-	        const mimc = await buildMimcSponge();
-	        const result = calculateMerkleRootAndPath(
-	            mimc,
-	            10,
-	            elements
-	        );
-	        expect(result.root).to.eq(root);
+	        const { root } = calculateMerkleRootAndPath(mimc, 10, elements);
+	        expect(root).to.eq(root);
 	    });
 
 	    it("should store correct root in MerkleTree contract", async () => {
@@ -125,77 +120,86 @@ describe("TornadoCash", function () {
 		const nullifierHash = 18208172621231796641083354354338910082449021226871113027305263222293538190423n;
 
 		it("should compute commitment", async () => {
-			const tester: WitnessTester = await circomkit.WitnessTester("CommitmentHasher", {
+			const commitmentTester = await circomkit.WitnessTester("CommitmentHasher", {
 				file: "TornadoCash/commitmentHasher",
 				template: "CommitmentHasher",
 				params: [],
 			});
 
-			const wtns = await tester.calculateWitness({ nullifier, secret });
+			const wtns = await commitmentTester.calculateWitness({ nullifier, secret });
 
 			expect(wtns[1]).to.eq(commitment);
 			expect(wtns[2]).to.eq(nullifierHash);
 		});
 
-		it("should pass withdraw", async () => {
-			const tester = await circomkit.WitnessTester("WithdrawVerifier", {
-				file: "TornadoCash/withdraw",
-				template: "Withdraw",
-				params: [10],
-				pubs: ["root", "nullifierHash", "recipient"],
-			});
+        describe("withdraw", () => {
 
-			const { root, pathElements, pathIndices } = calculateMerkleRootAndPath(mimc, 10, [commitment], commitment);
+            let proofTester: ProofTester;
+            let root: bigint;
+            let pathElements: bigint[];
+            let pathIndices: number[];
+            let proof: any;
+            let publicSignals: string[];
 
-			await tester.expectPass({
-				nullifier,
-				secret,
-				pathElements,
-				pathIndices,
-				root,
-				nullifierHash,
-				recipient: 1n,
-			});
-		});
+            before(async () => {
+                proofTester = await circomkit.ProofTester("Withdraw");
 
-        it("should verify withdraw proof", async () => {
-            const tester = await circomkit.ProofTester("Withdraw");
+                // making merkle tree and proof for the commitment
+                const merkleData = calculateMerkleRootAndPath(mimc, 10, [commitment], commitment);
 
-            const { root, pathElements, pathIndices } = calculateMerkleRootAndPath(mimc, 10, [commitment], commitment);
+                root = merkleData.root;
+                pathElements = merkleData.pathElements;
+                pathIndices = merkleData.pathIndices;
 
-            const { proof, publicSignals } = await tester.prove({
-                nullifier,
-                secret,
-                pathElements,
-                pathIndices,
-                root,
-                nullifierHash,
-                recipient: 1n,
+                // making correct proof
+                const proofData = await proofTester.prove({
+                    nullifier,
+                    secret,
+                    pathElements,
+                    pathIndices,
+                    root,
+                    nullifierHash,
+                    recipient: 1n,
+                });
+
+                proof = proofData.proof;
+                publicSignals = proofData.publicSignals;
             });
 
-            expect(await tester.verify(proof, publicSignals)).to.be.true;
-        });
-
-        it("shouldn't verify withdraw proof with different public signals", async () => {
-            const tester = await circomkit.ProofTester("Withdraw");
-
-            const { root, pathElements, pathIndices } = calculateMerkleRootAndPath(mimc, 10, [commitment], commitment);
-
-            const { proof, publicSignals } = await tester.prove({
-                nullifier,
-                secret,
-                pathElements,
-                pathIndices,
-                root,
-                nullifierHash,
-                recipient: 1n,
+            it("should pass withdraw", async () => {
+                const wtnsTester = await circomkit.WitnessTester("Withdraw", {
+                    file: "TornadoCash/withdraw",
+                    template: "Withdraw",
+                    params: [10],
+                    pubs: ["root", "nullifierHash", "recipient"],
+                });
+    
+                // checking constraints
+                await wtnsTester.expectPass({
+                    nullifier,
+                    secret,
+                    pathElements,
+                    pathIndices,
+                    root,
+                    nullifierHash,
+                    recipient: 1n,
+                });
             });
-
-            const fakeSignal = ethers.toBeHex(2n, 32)
-
-            expect(await tester.verify(proof, [fakeSignal, publicSignals[1], publicSignals[2]])).to.be.false;
-            expect(await tester.verify(proof, [publicSignals[0], fakeSignal, publicSignals[2]])).to.be.false;
-            expect(await tester.verify(proof, [publicSignals[0], publicSignals[1], fakeSignal])).to.be.false;
+    
+            it("should verify withdraw proof", async () => {
+                expect(await proofTester.verify(proof, publicSignals)).to.be.true;
+            });
+    
+            it("shouldn't verify withdraw proof with different public signals", async () => {
+                const fakeSignal = ethers.toBeHex(2n, 32)
+    
+                // fake root
+                expect(await proofTester.verify(proof, [fakeSignal, publicSignals[1], publicSignals[2]])).to.be.false;
+                // fake nullifierHash
+                expect(await proofTester.verify(proof, [publicSignals[0], fakeSignal, publicSignals[2]])).to.be.false;
+                // fake recipient
+                expect(await proofTester.verify(proof, [publicSignals[0], publicSignals[1], fakeSignal])).to.be.false;
+            });
         });
 	});
 
@@ -254,7 +258,7 @@ describe("TornadoCash", function () {
 
 			expect(await tornado.roots(root)).to.be.true;
 
-			const { proof } = await withdrawProver.prove({
+			const { proof } = (await withdrawProver.prove({
 				nullifier,
 				secret,
 				pathElements,
@@ -262,7 +266,7 @@ describe("TornadoCash", function () {
 				root,
 				nullifierHash,
 				recipient: BigInt(depositor.address),
-			});
+			})) as { proof: { pi_a: [bigint, bigint], pi_b: [[bigint, bigint], [bigint, bigint]], pi_c: [bigint, bigint] }, publicSignals: string[] };
 
 			const tx = await tornado.withdraw(
 				[ proof.pi_a[0], proof.pi_a[1] ],
