@@ -2,8 +2,8 @@
 	"version": "2.1.6",
     "protocol": "groth16",
     "dirCircuits": "./circuits",
-    "dirPtau": "./artifacts",
-    "dirBuild": "./artifacts/circuits",
+    "dirPtau": "./circuits/artifacts",
+    "dirBuild": "./circuits/artifacts",
     "verbose": false,
     "optimization": 2
 }
