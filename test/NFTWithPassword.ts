@@ -6,9 +6,9 @@ const circomkit = getCircomkit();
 
 describe("NFTWithPassword", () => {
 
-    // random private key
+    // random password
     const password = 3n;
-    // precomputed public key for the private key
+    // precomputed MiMC7 hash of the password
     const passwordHash = 10513607674170245577899825752483841247286555366379776940083295721103562343571n;
 
     async function deploy() {
