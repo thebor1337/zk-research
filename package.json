@@ -16,6 +16,7 @@
     "hardhat": "^2.19.2"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^5.0.1",
     "@zefi/circomjs": "^1.0.6",
     "circom_tester": "^0.0.20",
     "circomkit": "^0.0.19",

@@ -2,6 +2,7 @@ import { expect, ethers, loadFixture, getCircomkit, time } from "../setup";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 import { ProofTester } from "circomkit";
 import { buildMimcSponge, MimcSponge } from "circomlibjs";
+import { ZkProof } from "../src/types/zkProof";
 
 import { calculateMerkleRootAndPath } from "../src/TornadoCash";
 import { Tornado } from "../typechain-types";
@@ -19,7 +20,7 @@ describe("TornadoCash", function () {
         const merkleTreeFactory = await ethers.getContractFactory("MerkleTreeMock");
         const merkleTree = await merkleTreeFactory.deploy(MiMCSponge.target);
 
-		const Groth16VerifierFactory = await ethers.getContractFactory("Groth16Verifier");
+		const Groth16VerifierFactory = await ethers.getContractFactory("contracts/TornadoCash/Groth16Verifier.sol:Groth16Verifier");
 		const groth16Verifier = await Groth16VerifierFactory.deploy();
 
 		const TornadoFactory = await ethers.getContractFactory("Tornado");
@@ -50,7 +51,7 @@ describe("TornadoCash", function () {
 
 		it("circom", async () => {
 			const tester = await circomkit.WitnessTester("Hasher", {
-	            file: "TornadoCash/merkleTree",
+	            file: "utils/merkleTree",
 	            template: "Hasher",
 	            params: [],
 	        });
@@ -92,7 +93,7 @@ describe("TornadoCash", function () {
 
 	    it("should compute and check correct root in circom", async () => {
 	        const tester = await circomkit.WitnessTester("MerkleTreeChecker", {
-	            file: "TornadoCash/merkleTree",
+	            file: "utils/merkleTree",
 	            template: "MerkleTreeChecker",
 	            params: [10],
 	        });
@@ -258,7 +259,7 @@ describe("TornadoCash", function () {
 
 			expect(await tornado.roots(root)).to.be.true;
 
-			const { proof } = (await withdrawProver.prove({
+			const { proof, publicSignals } = (await withdrawProver.prove({
 				nullifier,
 				secret,
 				pathElements,
@@ -266,7 +267,7 @@ describe("TornadoCash", function () {
 				root,
 				nullifierHash,
 				recipient: BigInt(depositor.address),
-			})) as { proof: { pi_a: [bigint, bigint], pi_b: [[bigint, bigint], [bigint, bigint]], pi_c: [bigint, bigint] }, publicSignals: string[] };
+			})) as ZkProof;
 
 			const tx = await tornado.withdraw(
 				[ proof.pi_a[0], proof.pi_a[1] ],

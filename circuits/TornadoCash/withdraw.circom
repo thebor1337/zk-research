@@ -1,7 +1,7 @@
 pragma circom 2.0.0;
 
 include "commitmentHasher.circom";
-include "merkleTree.circom";
+include "../utils/merkleTree.circom";
 
 template Withdraw(treeLevels) {
     signal input nullifier;

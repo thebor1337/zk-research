@@ -1,0 +1,8 @@
+{
+    "verify_nft_password": {
+        "file": "VerifyNFTPassword",
+        "template": "VerifyNFTPassword",
+        "pubs": ["passwordHash", "recipient"],
+        "params": []
+    }
+}
