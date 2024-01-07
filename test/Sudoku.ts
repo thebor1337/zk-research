@@ -1,4 +1,4 @@
-import { getCircomkit, ethers, expect } from "../setup";
+import { getCircomkit, expect } from "../setup";
 
 const circomkit = getCircomkit();
 
