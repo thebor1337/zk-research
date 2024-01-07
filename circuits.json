@@ -2,7 +2,12 @@
     "verify_nft_password": {
         "file": "VerifyNFTPassword",
         "template": "VerifyNFTPassword",
-        "pubs": ["passwordHash", "recipient"],
-        "params": []
+        "pubs": ["passwordHash", "recipient"]
+    },
+    "sudoku_9x9": {
+        "file": "Sudoku",
+        "template": "CheckSudoku",
+        "params": [9, 3],
+        "pubs": ["question"]
     }
 }
