@@ -23,6 +23,3 @@ template IsZeroUnderconstrained() {
     // make it underconstrained intentionally
     // o * inv === 0;
 }
-
-// component main = IsZero();
-
