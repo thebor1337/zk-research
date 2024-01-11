@@ -1,7 +1,12 @@
 {
-    "verify_nft_password": {
-        "file": "VerifyNFTPassword",
-        "template": "VerifyNFTPassword",
+    "verify_nft_mint_1": {
+        "file": "VerifyNFTMint",
+        "template": "VerifyNFTMint1",
+        "pubs": ["passwordHash", "recipient"]
+    },
+    "verify_nft_mint_2": {
+        "file": "VerifyNFTMint",
+        "template": "VerifyNFTMint2",
         "pubs": ["passwordHash", "recipient"]
     },
     "sudoku_9x9": {
