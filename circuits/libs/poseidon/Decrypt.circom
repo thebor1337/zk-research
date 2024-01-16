@@ -3,7 +3,7 @@ pragma circom 2.0.0;
 include "../../../node_modules/circomlib/circuits/comparators.circom";
 
 include "../../utils/calculateTotal.circom";
-include "./Poseidon.circom";
+include "./poseidon.circom";
 
 template PoseidonDecrypt(l) {
     var decryptedLength = computeLength(l);

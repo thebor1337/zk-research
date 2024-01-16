@@ -11,7 +11,7 @@ describe("Sudoku", () => {
 
     it("should check whether a value is in range", async () => {
         const wtnsTester = await circomkit.WitnessTester("Sudoku", {
-            file: "Sudoku",
+            file: "sudoku",
             template: "InRange",
             pubs: ["lower", "upper"],
             params: [numBitsInSize]
@@ -30,7 +30,7 @@ describe("Sudoku", () => {
 
     it("should check whether a sequence does not contain duplicates", async () => {
         const wtnsTester = await circomkit.WitnessTester("ContainsOnlyUnique", {
-            file: "Sudoku",
+            file: "sudoku",
             template: "ContainsOnlyUnique",
             params: [size]
         });
@@ -96,7 +96,7 @@ describe("Sudoku", () => {
 
         it("should check correctness of sudoku solution", async () => {
             const wtnsTester = await circomkit.WitnessTester("sudoku_9x9", {
-                file: "Sudoku",
+                file: "sudoku",
                 template: "CheckSudoku",
                 params: [size, subSize],
                 pubs: ["question"]

@@ -20,7 +20,7 @@ describe("GroupSig", () => {
     describe("Keys", () => {
         it("should generate public key", async () => {
             const wtnsTester = await circomkit.WitnessTester("PubKeyGen", {
-                file: "GroupSig",
+                file: "groupSig",
                 template: "PubKeyGen"
             });
     
@@ -33,7 +33,7 @@ describe("GroupSig", () => {
     
         it("should verify public key", async () => {
             const wtnsTester = await circomkit.WitnessTester("PubKeyVerify", {
-                file: "GroupSig",
+                file: "groupSig",
                 template: "PubKeyVerify",
                 pubs: ["pubKey"]
             });
@@ -61,7 +61,7 @@ describe("GroupSig", () => {
             const { root, pathElements, pathIndices } = calculateMerkleRootAndPath(mimc, 4, groupMembers, publicKey);
     
             const wtnsTester = await circomkit.WitnessTester("SignMessage", {
-                file: "GroupSig",
+                file: "groupSig",
                 template: "SignMessage",
                 params: [4],
                 pubs: ["msgHash", "root", "pathIndices", "pathElements"]
@@ -80,7 +80,7 @@ describe("GroupSig", () => {
 
         it("should reveal identity", async () => {
             const wtnsTester = await circomkit.WitnessTester("RevealIdentity", {
-                file: "GroupSig",
+                file: "groupSig",
                 template: "RevealIdentity",
                 pubs: ["msgHash", "msgSignature", "pubKey"]
             });

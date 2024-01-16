@@ -1,5 +1,4 @@
 import { getCircomkit, ethers, expect, loadFixture } from "../setup";
-// import { buildPoseidon, Poseidon } from "circomlibjs";
 import { ZkProof } from "../src/types/zkProof";
 
 const circomkit = getCircomkit();
@@ -33,7 +32,7 @@ describe("NFTMint", () => {
 
     it("verify preimage", async () => {
         const wtnsTester = await circomkit.WitnessTester("verify_preimage", {
-            "file": "VerifyNFTMint",
+            "file": "verifyNFTMint",
             "template": "VerifyPreimage"
         });
 

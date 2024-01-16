@@ -1,18 +1,30 @@
 {
     "verify_nft_mint_1": {
-        "file": "VerifyNFTMint",
+        "file": "verifyNFTMint",
         "template": "VerifyNFTMint1",
         "pubs": ["passwordHash", "recipient"]
     },
     "verify_nft_mint_2": {
-        "file": "VerifyNFTMint",
+        "file": "verifyNFTMint",
         "template": "VerifyNFTMint2",
         "pubs": ["passwordHash", "recipient"]
     },
     "sudoku_9x9": {
-        "file": "Sudoku",
+        "file": "sudoku",
         "template": "CheckSudoku",
         "params": [9, 3],
         "pubs": ["question"]
+    },
+    "sell_eth_addr": {
+        "file": "market/ethAddrMarket",
+        "template": "SellETHAddress",
+        "params": [64, 4],
+        "pubs": ["encryptedPrivateECDSAKey", "sharedKeyHash", "poseidonNonce"]
+    },
+    "tornado_withdraw": {
+        "file": "tornado/withdraw",
+        "template": "Withdraw",
+        "params": [10],
+        "pubs": ["root", "nullifierHash", "recipient"]
     }
 }

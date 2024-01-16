@@ -1,6 +1,6 @@
 pragma circom 2.0.0;
 
-include "./PoseidonConstants.circom";
+include "./poseidonConstants.circom";
 
 // e.g. l = 4; length = 6
 function computeLength(l) {

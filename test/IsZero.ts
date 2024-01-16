@@ -4,7 +4,7 @@ import { WitnessTester } from "circomkit";
 const circomkit = getCircomkit();
 
 describe("IsZero", () => {
-	const circuit_file = "IsZero";
+	const circuit_file = "utils/isZero";
 
     let tester: WitnessTester;
 

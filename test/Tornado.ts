@@ -122,7 +122,7 @@ describe("TornadoCash", function () {
 
 		it("should compute commitment", async () => {
 			const commitmentTester = await circomkit.WitnessTester("CommitmentHasher", {
-				file: "TornadoCash/commitmentHasher",
+				file: "tornado/commitmentHasher",
 				template: "CommitmentHasher",
 				params: [],
 			});
@@ -143,7 +143,7 @@ describe("TornadoCash", function () {
             let publicSignals: string[];
 
             before(async () => {
-                proofTester = await circomkit.ProofTester("Withdraw");
+                proofTester = await circomkit.ProofTester("tornado_withdraw");
 
                 // making merkle tree and proof for the commitment
                 const merkleData = calculateMerkleRootAndPath(mimc, 10, [commitment], commitment);
@@ -168,8 +168,8 @@ describe("TornadoCash", function () {
             });
 
             it("should pass withdraw", async () => {
-                const wtnsTester = await circomkit.WitnessTester("Withdraw", {
-                    file: "TornadoCash/withdraw",
+                const wtnsTester = await circomkit.WitnessTester("tornado_withdraw", {
+                    file: "tornado/withdraw",
                     template: "Withdraw",
                     params: [10],
                     pubs: ["root", "nullifierHash", "recipient"],
@@ -226,7 +226,7 @@ describe("TornadoCash", function () {
             tornado = data.tornado;
             depositor = data.user1;
             user = data.user2;
-            withdrawProver = await circomkit.ProofTester("Withdraw");
+            withdrawProver = await circomkit.ProofTester("tornado_withdraw");
         });
 
 		it("should deposit", async () => {
@@ -259,7 +259,7 @@ describe("TornadoCash", function () {
 
 			expect(await tornado.roots(root)).to.be.true;
 
-			const { proof, publicSignals } = (await withdrawProver.prove({
+			const { proof } = (await withdrawProver.prove({
 				nullifier,
 				secret,
 				pathElements,

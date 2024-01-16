@@ -1,4 +1,4 @@
-import { getCircomkit, ethers, expect } from "../setup";
+import { getCircomkit, expect } from "../setup";
 import { buildBabyjub, BabyJub } from "circomlibjs";
 
 const circomkit = getCircomkit();
@@ -21,11 +21,25 @@ describe("Encryption Example", () => {
 
     describe("Computing parameters", () => {
 
+        function computePublicKey(privateKey: bigint) {
+            const publicKeyPoint = jub.mulPointEscalar(jub.Base8, privateKey);
+            return [
+                BigInt(jub.F.toString(publicKeyPoint[0])),
+                BigInt(jub.F.toString(publicKeyPoint[1]))
+            ];
+        };
+
+        let jub: BabyJub;
+
+        before(async () => {
+            jub = await buildBabyjub();
+        });
+
         it("should calculate correct public key", async () => {
             const privateKey = 5n;
 
             const wtnsTester = await circomkit.WitnessTester("gen_public_key", {
-                file: "EncryptionExample",
+                file: "utils/genPubKey",
                 template: "GenPublicKey"
             });
 
@@ -46,7 +60,7 @@ describe("Encryption Example", () => {
             const publicKeys = privateKeys.map(privateKey => computePublicKey(privateKey));
 
             const wtnsTester = await circomkit.WitnessTester("ecdh", {
-                file: "EncryptionExample",
+                file: "utils/ecdh",
                 template: "ECDH"
             });
 
@@ -74,12 +88,12 @@ describe("Encryption Example", () => {
 
         it("should encrypt and decrypt correctly", async () => {
             const encryptionCircuit = await circomkit.WitnessTester("encryption", {
-                file: "EncryptionExample",
+                file: "encryptionExample",
                 template: "Encryption"
             });
 
             const decryptionCircuit = await circomkit.WitnessTester("decryption", {
-                file: "EncryptionExample",
+                file: "encryptionExample",
                 template: "Decryption"
             });
 
