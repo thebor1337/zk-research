@@ -1,13 +1,29 @@
 # ZK Research
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This repository contains some examples of various Circom and zkSNARK patterns and solutions with tests.
 
-Try running some of the following tasks:
+Do not use this in production, the project was made in learning and researching purposes.
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+For instantiating Circom circuits and building zkSNARK verification systems, [circomkit](https://github.com/erhant/circomkit) library was used.
+
+## How to run
+
+###### Running tests
+
+```
+npx hardhat test ./test/<example_name>.ts
+```
+
+###### Compiling circuits
+
+```
+npx circomkit compile <circuit_name>
+```
+
+**<circuit_name> from circuits.json file.*
+
+###### Circuits setup
+
+```
+npx circomkit setup <circuit_name>
 ```
