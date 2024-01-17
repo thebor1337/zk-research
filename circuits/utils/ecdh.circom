@@ -1,7 +1,7 @@
 pragma circom 2.1.6;
 
-include "../node_modules/circomlib/circuits/bitify.circom";
-include "../node_modules/circomlib/circuits/escalarmulany.circom";
+include "circomlib/circuits/bitify.circom";
+include "circomlib/circuits/escalarmulany.circom";
 
 /// @notice Computes the shared key between two parties
 /// @param privateKey The private key of one of the parties

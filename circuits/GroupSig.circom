@@ -1,6 +1,7 @@
 pragma circom 2.1.6;
 
-include "../node_modules/circomlib/circuits/mimcsponge.circom";
+include "circomlib/circuits/mimcsponge.circom";
+
 include "./utils/merkleTree.circom";
 
 template PubKeyGen () {

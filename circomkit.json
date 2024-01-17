@@ -5,5 +5,8 @@
     "dirPtau": "./circuits/artifacts",
     "dirBuild": "./circuits/artifacts",
     "verbose": false,
+    "include": [
+        "./node_modules"
+    ],
     "optimization": 2
 }

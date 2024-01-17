@@ -1,7 +1,7 @@
 pragma circom 2.1.6;
 
-include "../node_modules/circomlib/circuits/bitify.circom";
-include "../node_modules/circomlib/circuits/escalarmulfix.circom";
+include "circomlib/circuits/bitify.circom";
+include "circomlib/circuits/escalarmulfix.circom";
 
 /// @notice Computes the public key from a private key for BabyJub curve
 /// @param privateKey The private key

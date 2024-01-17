@@ -1,8 +1,8 @@
 pragma circom 2.1.6;
 
-include "../node_modules/circomlib/circuits/comparators.circom";
-include "../node_modules/circomlib/circuits/gates.circom";
-include "../node_modules/circomlib/circuits/binsum.circom";
+include "circomlib/circuits/comparators.circom";
+include "circomlib/circuits/gates.circom";
+include "circomlib/circuits/binsum.circom";
 
 template InRange(nBits) {
     signal input value;

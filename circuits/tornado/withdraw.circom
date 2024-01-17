@@ -1,6 +1,6 @@
 pragma circom 2.0.0;
 
-include "commitmentHasher.circom";
+include "./commitmentHasher.circom";
 include "../utils/merkleTree.circom";
 
 template Withdraw(treeLevels) {

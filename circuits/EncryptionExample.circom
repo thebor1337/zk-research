@@ -1,8 +1,9 @@
 pragma circom 2.1.6;
 
-include "../node_modules/circomlib/circuits/mimc.circom";
-include "../node_modules/circomlib/circuits/bitify.circom";
-include "../node_modules/circomlib/circuits/escalarmulany.circom";
+include "circomlib/circuits/mimc.circom";
+include "circomlib/circuits/bitify.circom";
+include "circomlib/circuits/escalarmulany.circom";
+
 include "./utils/ecdh.circom";
 
 /// @notice Encrypts a message using a key
