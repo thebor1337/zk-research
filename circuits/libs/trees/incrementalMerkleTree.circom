@@ -45,41 +45,27 @@ template MerkleTreeInclusionProof(n_levels) {
 }
 
 // Ensures that a leaf exists within a merkletree with given `root`
-template LeafExists(levels){
-
-    // levels is depth of tree
+template MerkleTreeLeafExists(levels){
     signal input leaf;
 
-    signal input path_elements[levels][1];
+    signal input path_elements[levels];
     signal input path_index[levels];
 
     signal input root;
 
-    component merkletree = MerkleTreeInclusionProof(levels);
-    merkletree.leaf <== leaf;
-    for (var i = 0; i < levels; i++) {
-        merkletree.path_index[i] <== path_index[i];
-        merkletree.path_elements[i][0] <== path_elements[i][0];
-    }
+    signal computedRoot <== MerkleTreeInclusionProof(levels)(
+        leaf <== leaf,
+        path_index <== path_index,
+        path_elements <== path_elements
+    );
 
-    root === merkletree.root;
+    root === computedRoot;
 }
 
 // Given a Merkle root and a list of leaves, check if the root is the
 // correct result of inserting all the leaves into the tree (in the given
 // order)
 template MerkleTreeCheckRoot(levels) {
-    // Circom has some perticularities which limit the code patterns we can
-    // use.
-
-    // You can only assign a value to a signal once.
-
-    // A component's input signal must only be wired to another component's output
-    // signal.
-
-    // Variables are only used for loops, declaring sizes of things, and anything
-    // that is not related to inputs of a circuit.
-
     // The total number of leaves
     var totalLeaves = 2 ** levels;
 
@@ -103,24 +89,24 @@ template MerkleTreeCheckRoot(levels) {
 
     // Instantiate all hashers
     var i;
-    for (i=0; i < numHashers; i++) {
+    for (i = 0; i < numHashers; i++) {
         hashers[i] = HashLeftRight();
     }
 
     // Wire the leaf values into the leaf hashers
-    for (i=0; i < numLeafHashers; i++){
-        hashers[i].left <== leaves[i*2];
-        hashers[i].right <== leaves[i*2+1];
+    for (i = 0; i < numLeafHashers; i++){
+        hashers[i].left <== leaves[i * 2];
+        hashers[i].right <== leaves[i * 2 + 1];
     }
 
     // Wire the outputs of the leaf hashers to the intermediate hasher inputs
     var k = 0;
-    for (i=numLeafHashers; i<numLeafHashers + numIntermediateHashers; i++) {
-        hashers[i].left <== hashers[k*2].hash;
-        hashers[i].right <== hashers[k*2+1].hash;
+    for (i = numLeafHashers; i < numLeafHashers + numIntermediateHashers; i++) {
+        hashers[i].left <== hashers[k * 2].hash;
+        hashers[i].right <== hashers[k * 2 + 1].hash;
         k++;
     }
 
     // Wire the output of the final hash to this circuit's output
-    root <== hashers[numHashers-1].hash;
+    root <== hashers[numHashers - 1].hash;
 }
