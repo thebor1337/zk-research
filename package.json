@@ -18,11 +18,14 @@
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.1",
     "@zefi/circomjs": "^1.0.6",
+    "@zk-kit/imt": "^2.0.0-beta",
+    "@zk-kit/utils": "^0.1.0",
     "circom_tester": "^0.0.20",
     "circomkit": "^0.0.19",
     "circomlib": "^2.0.5",
     "circomlibjs": "^0.1.7",
     "merkletreejs": "^0.3.11",
+    "poseidon-lite": "^0.2.0",
     "snarkjs": "^0.7.2"
   }
 }

@@ -1,6 +1,6 @@
 pragma circom 2.0.0;
 
-include "../../../node_modules/circomlib/circuits/comparators.circom";
+include "circomlib/circuits/comparators.circom";
 
 include "../../utils/calculateTotal.circom";
 include "./poseidon.circom";

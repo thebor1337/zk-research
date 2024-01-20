@@ -1,4 +1,5 @@
 import { ethers } from "../setup";
+import { type WitnessTester } from "circomkit";
 
 const sliceHexData = (hexData: string, parts: number, reverse?: boolean) => {
 	if (!hexData.startsWith("0x"))
@@ -40,9 +41,21 @@ const xyPointToUncompressedPoint = (point: [bigint, bigint]): string => {
 	return "0x04" + x + y;
 };
 
+// https://github.com/privacy-scaling-explorations/maci/blob/dev/circuits/ts/__tests__/utils/utils.ts#L37
+const getSignal = async (tester: WitnessTester, witness: bigint[], name: string): Promise<bigint> => {
+    const prefix = "main";
+    // E.g. the full name of the signal "root" is "main.root"
+    // You can look up the signal names using `circuit.getDecoratedOutput(witness))`
+    const signalFullName = `${prefix}.${name}`;
+  
+    const out = await tester.readWitness(witness, [signalFullName]);
+    return BigInt(out[signalFullName]);
+};
+
 export {
 	sliceHexData,
 	concatHexData,
 	uncompressedPointToXYPoint,
 	xyPointToUncompressedPoint,
+    getSignal
 };
