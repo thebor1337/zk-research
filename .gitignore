@@ -15,3 +15,6 @@ node_modules
 
 /circuits/test
 /circuits/artifacts
+
+.vscode
+.notes

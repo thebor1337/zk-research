@@ -11,21 +11,19 @@ template ECDH () {
     signal input privateKey;
     signal input publicKey[2];
 
-    signal output sharedKey;
+    signal output sharedKey[2];
 
-    var N = 253;
-
-    component privateKeyBits = Num2Bits(N);
+    component privateKeyBits = Num2Bits(253);
     privateKeyBits.in <== privateKey;
 
-    component mul = EscalarMulAny(N);
+    component mul = EscalarMulAny(253);
     mul.p[0] <== publicKey[0];
     mul.p[1] <== publicKey[1];
 
-    for (var i = 0; i < N; i++) {
+    for (var i = 0; i < 253; i++) {
         mul.e[i] <== privateKeyBits.out[i];
     }
 
-    // Diffie-Helman shared key is the x coordinate of the result point
-    sharedKey <== mul.out[0];
+    sharedKey[0] <== mul.out[0];
+    sharedKey[1] <== mul.out[1];
 }

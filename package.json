@@ -18,7 +18,10 @@
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.1",
     "@zefi/circomjs": "^1.0.6",
+    "@zk-kit/baby-jubjub": "^0.1.1",
+    "@zk-kit/eddsa-poseidon": "^0.5.1",
     "@zk-kit/imt": "^2.0.0-beta",
+    "@zk-kit/poseidon-cipher": "^0.1.1",
     "@zk-kit/utils": "^0.1.0",
     "circom_tester": "^0.0.20",
     "circomkit": "^0.0.19",
