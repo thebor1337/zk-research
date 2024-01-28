@@ -18,3 +18,5 @@ node_modules
 
 .vscode
 .notes
+
+**/.DS_Store
